@@ -66,7 +66,10 @@ if (!dataDir) {
   if (isMac) dataDir = process.env.HOME + '/Library/Application Support/Bitcoin/';
   if (isLinux) dataDir = process.env.HOME + '/.dogecoin/';
 }
-dataDir += network === 'testnet' ? 'testnet3' : '';
+// dataDir += network === 'dogetest' ? 'testnet3' : '';
+if (network === 'testnet' || network === 'dogetest' || network === 'ltctest' ) {
+  dataDir += 'testnet3';
+}
 
 var safeConfirmations = process.env.INSIGHT_SAFE_CONFIRMATIONS || 6;
 var ignoreCache = process.env.INSIGHT_IGNORE_CACHE || 0;
