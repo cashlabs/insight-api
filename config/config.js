@@ -57,9 +57,12 @@ var isLinux = /^linux/.test(process.platform);
 if (!dataDir) {
   if (isWin) dataDir = '%APPDATA%\\Bitcoin\\';
   if (isMac) dataDir = process.env.HOME + '/Library/Application Support/Bitcoin/';
-  if (isLinux) dataDir = process.env.HOME + '/.dogluhkafbnecoin/';
+  if (isLinux) dataDir = process.env.HOME + '/.dogecoin/';
 }
-dataDir += network === 'testnet' ? 'testnet3' : '';
+// dataDir += network === 'dogetest' ? 'testnet3' : '';
+if (network === 'testnet' || network === 'dogetest' || network === 'ltctest' ) {
+  dataDir += 'testnet3';
+}
 
 
 if (! fs.existsSync(db)){
