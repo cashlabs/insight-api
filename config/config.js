@@ -20,25 +20,65 @@ function getUserHome() {
 }
 
 var home = process.env.INSIGHT_DB || (getUserHome() + '/.insight');
+var dotdir, rpcuser, rpcpass;
 
 if (process.env.INSIGHT_NETWORK === 'livenet') {
   env = 'livenet';
   db = home;
-  port = '3000';
+  port = '3001';
+  sslport = '3000';
   b_port = '8332';
   p2p_port = '8333';
+  dotdir = '/.bitcoin/';
+  rpcuser = 'bitcoinrpc';
 } else if (process.env.INSIGHT_NETWORK === 'testnet') {
   env = 'testnet';
   db = home + '/testnet';
-  port = '3001';
-  b_port = '44555';
-  p2p_port = '44556';
+  port = '8000'; // 3001 on prod
+  // sslport = '3000'; // on prod
+  b_port = '18332';
+  p2p_port = '18333';
+  dotdir = '/.bitcoin/';
+  rpcuser = 'bitcoinrpc';
+  rpcpass = 'GCa3syfc5boPb5tCKSyVNmh1YXKNoa6cVwyUu4r1NP6d';
+} else if (process.env.INSIGHT_NETWORK === 'dogelive') {
+  env = 'dogelive';
+  db = home;
+  port = '8001';
+  sslport = '8000';
+  b_port = '22555';
+  p2p_port = 'R2256';
+  dotdir = '/.dogecoin/';
+  rpcuser = 'dogecoinrpc';
 } else if (process.env.INSIGHT_NETWORK === 'dogetest') {
   env = 'dogetest';
   db = home + '/testnet';
   port = '8000';
+  // sslport = '3000'; // on prod
   b_port = '44555';
   p2p_port = '44556';
+  dotdir = '/.dogecoin/';
+  rpcuser = 'dogecoinrpc';
+  rpcpass = 'CAF74RYfPh9Um4eQ5CfYgxQmv6GtKAYq5DbYY17Aq6GR';
+} else if (process.env.INSIGHT_NETWORK === 'ltclive') {
+  env = 'ltclive';
+  db = home;
+  port = '8001';
+  sslport = '8000';
+  b_port = '9332';
+  p2p_port = '9333';
+  dotdir = '/.litecoin';
+  rpcuser = 'litecoinrpc';
+} else if (process.env.INSIGHT_NETWORK === 'ltctest') {
+  env = 'ltctest',
+  db = home + '/testnet';
+  port = '8000';
+  // sslport = '3000'; // on prod
+  b_port = '19332';
+  p2p_port = '19333';
+  dotdir = '/.litecoin/';
+  rpcuser = 'litecoinrpc';
+  rpcpass = 'D4V5U6Av2cedHYTwco6V9jYJTVYc5r8vUM8Tpf25nvNZ';
 }
 port = parseInt(process.env.INSIGHT_PORT) || port;
 
@@ -64,7 +104,7 @@ var isLinux = /^linux/.test(process.platform);
 if (!dataDir) {
   if (isWin) dataDir = '%APPDATA%\\Bitcoin\\';
   if (isMac) dataDir = process.env.HOME + '/Library/Application Support/Bitcoin/';
-  if (isLinux) dataDir = process.env.HOME + '/.dogecoin/';
+  if (isLinux) dataDir = process.env.HOME + dotdir;
 }
 // dataDir += network === 'dogetest' ? 'testnet3' : '';
 if (network === 'testnet' || network === 'dogetest' || network === 'ltctest' ) {
@@ -73,20 +113,6 @@ if (network === 'testnet' || network === 'dogetest' || network === 'ltctest' ) {
 
 var safeConfirmations = process.env.INSIGHT_SAFE_CONFIRMATIONS || 6;
 var ignoreCache = process.env.INSIGHT_IGNORE_CACHE || 0;
-
-
-var bitcoindConf = {
-  protocol: process.env.BITCOIND_PROTO || 'http',
-  user: process.env.BITCOIND_USER || 'user',
-  pass: process.env.BITCOIND_PASS || 'pass',
-  host: process.env.BITCOIND_HOST || '127.0.0.1',
-  port: process.env.BITCOIND_PORT || b_port,
-  p2pPort: process.env.BITCOIND_P2P_PORT || p2p_port,
-  p2pHost: process.env.BITCOIND_P2P_HOST || process.env.BITCOIND_HOST || '127.0.0.1',
-  dataDir: dataDir,
-  // DO NOT CHANGE THIS!
-  disableAgent: true
-};
 
 var enableMonitor = process.env.ENABLE_MONITOR === 'true';
 var enableCleaner = process.env.ENABLE_CLEANER === 'true';
@@ -119,8 +145,8 @@ module.exports = {
   leveldb: db,
   bitcoind: {
     protocol:  process.env.BITCOIND_PROTO || 'http',
-    user: process.env.BITCOIND_USER || 'dogecoinrpc',
-    pass: process.env.BITCOIND_PASS || 'CAF74RYfPh9Um4eQ5CfYgxQmv6GtKAYq5DbYY17Aq6GR',
+    user: process.env.BITCOIND_USER || rpcuser,
+    pass: process.env.BITCOIND_PASS || rpcpass,
     host: process.env.BITCOIND_HOST || '127.0.0.1',
     port: process.env.BITCOIND_PORT || b_port,
     p2pHost: process.env.BITCOIND_P2P_HOST || process.env.BITCOIND_HOST || '127.0.0.1',
