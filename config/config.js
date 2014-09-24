@@ -93,7 +93,7 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   port = '8000';
   b_port = '16666';
   p2p_port = '15556';
-  dotdir = '/.eMark';
+  dotdir = '/.eMark/';
   rpcuser = 'eMarkrpc';
   rpcpass = '8duKjf6K1BomAbxDGgUou2weahXHqRGtqrvL7NzDnUMW';
 }
@@ -126,6 +126,8 @@ if (!dataDir) {
 // dataDir += network === 'dogetest' ? 'testnet3' : '';
 if (network === 'testnet' || network === 'dogetest' || network === 'ltctest' ) {
   dataDir += 'testnet3';
+} else if (network === 'demtest') {
+  dataDir += 'testnet2';
 }
 
 var safeConfirmations = process.env.INSIGHT_SAFE_CONFIRMATIONS || 6;
