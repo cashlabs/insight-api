@@ -79,6 +79,23 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   dotdir = '/.litecoin/';
   rpcuser = 'litecoinrpc';
   rpcpass = 'D4V5U6Av2cedHYTwco6V9jYJTVYc5r8vUM8Tpf25nvNZ';
+} else if (process.env.INSIGHT_NETWORK === 'demlive') {
+  env = 'demlive';
+  db = home;
+  port = '4000';
+  b_port = '6666';
+  p2p_port = '5556';
+  dotdir = '/.eMark/';
+  rpcuser = 'eMarkrpc';
+} else if (process.env.INSIGHT_NETWORK === 'demtest') {
+  env = 'demtest';
+  db = home + '/testnet';
+  port = '8000';
+  b_port = '16666';
+  p2p_port = '15556';
+  dotdir = '/.eMark';
+  rpcuser = 'eMarkrpc';
+  rpcpass = '8duKjf6K1BomAbxDGgUou2weahXHqRGtqrvL7NzDnUMW';
 }
 port = parseInt(process.env.INSIGHT_PORT) || port;
 
@@ -119,7 +136,7 @@ var enableCleaner = process.env.ENABLE_CLEANER === 'true';
 var enableMailbox = process.env.ENABLE_MAILBOX === 'true';
 var enableRatelimiter = process.env.ENABLE_RATELIMITER === 'true';
 var loggerLevel = process.env.LOGGER_LEVEL || 'info';
-var enableHTTPS = process.env.ENABLE_HTTPS === 'true'; 
+var enableHTTPS = process.env.ENABLE_HTTPS === 'true';
 
 if (!fs.existsSync(db)) {
   mkdirp.sync(db);
