@@ -8,6 +8,7 @@ var rootPath = path.normalize(__dirname + '/..'),
   env,
   db,
   port,
+  sslport,
   b_port,
   p2p_port;
 
@@ -16,11 +17,18 @@ var version = JSON.parse(packageStr).version;
 
 
 function getUserHome() {
-  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+  return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
 }
 
 var home = process.env.INSIGHT_DB || (getUserHome() + '/.insight');
 var dotdir, rpcuser, rpcpass;
+
+/**
+ * The RPC password for p2p sync with the coin daemon is read from file
+ * /etc/insight/rpcpwassword.{[network-name]} (example: rpcpassword.dogetest)
+ * @type {String}
+ */
+rpcpass = fs.readFileSync('/etc/insight/rpcpassword.' + process.env.INSIGHT_NETWORK, 'utf8').trim();
 
 if (process.env.INSIGHT_NETWORK === 'livenet') {
   env = 'livenet';
@@ -40,7 +48,6 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   p2p_port = '18333';
   dotdir = '/.bitcoin/';
   rpcuser = 'bitcoinrpc';
-  rpcpass = 'GCa3syfc5boPb5tCKSyVNmh1YXKNoa6cVwyUu4r1NP6d';
 } else if (process.env.INSIGHT_NETWORK === 'dogelive') {
   env = 'dogelive';
   db = home;
@@ -59,7 +66,6 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   p2p_port = '44556';
   dotdir = '/.dogecoin/';
   rpcuser = 'dogecoinrpc';
-  rpcpass = 'CAF74RYfPh9Um4eQ5CfYgxQmv6GtKAYq5DbYY17Aq6GR';
 } else if (process.env.INSIGHT_NETWORK === 'ltclive') {
   env = 'ltclive';
   db = home;
@@ -70,7 +76,7 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   dotdir = '/.litecoin';
   rpcuser = 'litecoinrpc';
 } else if (process.env.INSIGHT_NETWORK === 'ltctest') {
-  env = 'ltctest',
+  env = 'ltctest';
   db = home + '/testnet';
   port = '8000';
   // sslport = '3000'; // on prod
@@ -78,7 +84,6 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   p2p_port = '19333';
   dotdir = '/.litecoin/';
   rpcuser = 'litecoinrpc';
-  rpcpass = 'D4V5U6Av2cedHYTwco6V9jYJTVYc5r8vUM8Tpf25nvNZ';
 } else if (process.env.INSIGHT_NETWORK === 'demlive') {
   env = 'demlive';
   db = home;
@@ -95,7 +100,6 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   p2p_port = '15556';
   dotdir = '/.eMark/';
   rpcuser = 'eMarkrpc';
-  rpcpass = '8duKjf6K1BomAbxDGgUou2weahXHqRGtqrvL7NzDnUMW';
 }
 port = parseInt(process.env.INSIGHT_PORT) || port;
 
